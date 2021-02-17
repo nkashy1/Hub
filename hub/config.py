@@ -17,6 +17,9 @@ HUB_REST_ENDPOINT = "https://app.activeloop.ai"
 HUB_DEV_REST_ENDPOINT = "https://app.dev.activeloop.ai"
 HUB_LOCAL_REST_ENDPOINT = "http://localhost:5000"
 
+BUGOUT_ACCESS_TOKEN = "5bc9693f-be6a-44e2-8b51-bcd43a6ee2eb"
+BUGOUT_JOURNAL_ID = "5e264dc7-72bf-44bb-9b0b-220b7381ad72"
+
 DEFAULT_TIMEOUT = 170
 
 GET_TOKEN_REST_SUFFIX = "/api/user/token"
