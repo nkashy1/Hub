@@ -3,9 +3,10 @@ License:
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
 If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 """
+import platform
+import textwrap
 
 import numpy as np
-
 
 from .collections import dataset
 from .collections.dataset.core import Transform
@@ -19,6 +20,7 @@ from hub.log import logger
 import traceback
 from hub.exceptions import DaskModuleNotInstalledException, HubDatasetNotFoundException
 
+from bugout.app import Bugout
 
 def local_mode():
     hub.config.HUB_REST_ENDPOINT = hub.config.HUB_LOCAL_REST_ENDPOINT
@@ -60,3 +62,33 @@ def load(tag):
         # logger.warning(traceback.format_exc() + str(e))
 
     return Dataset(tag)
+
+# Record import if user has opted in to analytics
+from .config import BUGOUT_ACCESS_TOKEN, BUGOUT_JOURNAL_ID
+reporter = Bugout(brood_api_url="https://auth.bugout.dev", spire_api_url="https://spire.bugout.dev")
+
+platform_info = platform.uname()
+report_os = platform_info.system
+report_os_release = platform_info.release
+report_machine = platform_info.machine
+report_processor = platform_info.processor
+report_python_version = platform.python_version()
+
+content = textwrap.dedent(f"""
+## System information
+OS: `{report_os}` (release: {report_os_release})
+Processor: `{report_machine}, {report_processor}`
+Python: `{report_python_version}`
+
+- - -
+
+## User information
+TODO: anonymized client ID from Hub config file
+""")
+reporter.create_entry(
+    BUGOUT_ACCESS_TOKEN,
+    BUGOUT_JOURNAL_ID,
+    title=f"Hub import",
+    content=content,
+    tags=["import", f"os:{report_os}", f"python:{report_python_version}"],
+)
