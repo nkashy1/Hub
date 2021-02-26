@@ -71,13 +71,12 @@ platform_info = platform.uname()
 report_os = platform_info.system
 report_os_release = platform_info.release
 report_machine = platform_info.machine
-report_processor = platform_info.processor
 report_python_version = platform.python_version()
 
 content = textwrap.dedent(f"""
 ## System information
 OS: `{report_os}` (release: {report_os_release})
-Processor: `{report_machine}, {report_processor}`
+Processor: `{report_machine}`
 Python: `{report_python_version}`
 
 - - -
